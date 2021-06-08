@@ -15,9 +15,15 @@ const Home = () => {
   const dispatch = useDispatch()
   const timer = useRef(null)
   const { targetTime, currentTime, users } = useSelector((state) => state)
-  const [countdown, setCountdown] = useState()
+  const [countdown, setCountdown] = useState('')
   const handleOnChange = (e) => setCountdown(e.target.value)
-  const setupCountdown = () => (timer.current = dispatch(startCount(countdown)))
+  const setupCountdown = () => {
+    if (countdown === '') {
+      alert('How many lucky minutes do you want?')
+      return
+    }
+    timer.current = dispatch(startCount(countdown))
+  }
   const isButtonDisabled = users.length <= 0
 
   useEffect(() => {

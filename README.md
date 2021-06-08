@@ -17,6 +17,10 @@ run `yarn watch`
 
 ---
 
+## Demo
+
+CodeSandbox: https://fe1r6.sse.codesandbox.io/
+
 ## Preview
 
 ![首頁圖片](public/preview.png)
