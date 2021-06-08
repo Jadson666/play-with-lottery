@@ -1,9 +1,9 @@
 import { useRouter } from 'next/dist/client/router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { setUsers, startCount } from '../action'
+import { clearTimer, setUsers, startCount } from '../action'
 import { NumericInput } from '../components/NumericInput'
 import { Record } from '../components/Record'
 import { formatTime } from '../lib/formatTime'
@@ -13,7 +13,6 @@ import { useSelector } from '../lib/useSelector'
 const Home = () => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const timer = useRef(null)
   const { targetTime, currentTime, users } = useSelector((state) => state)
   const [countdown, setCountdown] = useState('')
   const handleOnChange = (e) => setCountdown(e.target.value)
@@ -22,25 +21,22 @@ const Home = () => {
       alert('How many lucky minutes do you want?')
       return
     }
-    timer.current = dispatch(startCount(countdown))
+    dispatch(startCount(countdown))
   }
   const isButtonDisabled = users.length <= 0
 
   useEffect(() => {
     userService.getUsers().then((users) => dispatch(setUsers(users)))
     return () => {
-      if (timer.current) clearInterval(timer.current)
+      dispatch(clearTimer())
     }
   }, [])
 
   useEffect(() => {
     if (!targetTime || !targetTime) return
     if (targetTime <= currentTime) {
-      if (timer.current) {
-        clearInterval(timer.current)
         const user = userService.getRandomUser()
         router.push(`/result?uid=${user.id}`)
-      }
     }
   }, [currentTime])
 

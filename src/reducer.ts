@@ -4,14 +4,16 @@ import { User } from './lib/userService'
 
 export interface RootState {
   users: User[]
-  targetTime: DateTime
+  targetTime: DateTime | undefined
   currentTime: DateTime
+  timer: number | undefined
 }
 
 const initialState: RootState = {
   users: [],
-  targetTime: null,
-  currentTime: DateTime.now()
+  targetTime: undefined,
+  currentTime: DateTime.now(),
+  timer: undefined
 }
 
 const reducer = (state: RootState = initialState, action) => {
@@ -36,6 +38,21 @@ const reducer = (state: RootState = initialState, action) => {
       return {
         ...state,
         currentTime: DateTime.now()
+      }
+    }
+    case ActionType.SET_TIMER: {
+      const timer = action.payload
+      return {
+        ...state,
+        timer
+      }
+    }
+    case ActionType.CLEAR_TIMER: {
+      if (state.timer) clearInterval(state.timer)
+      return {
+        ...state,
+        targetTime: null,
+        timer: undefined
       }
     }
     default:
